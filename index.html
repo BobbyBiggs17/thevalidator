@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+html<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -18,12 +18,10 @@
   <div id="root"></div>
   <script type="text/babel">
     const { useState } = React;
-
     const BIAS_COLORS = {
       "Hard Left": "#e63946", "Left-Leaning": "#f4845f", "Center-Left": "#f7b267",
       "Centrist": "#a8dadc", "Center-Right": "#90be6d", "Right-Leaning": "#43aa8b", "Hard Right": "#277da1",
     };
-
     function ScoreBox({ label, value, sublabel, color }) {
       return (
         <div style={{ background: "#0d0d0d", padding: "20px" }}>
@@ -36,7 +34,6 @@
         </div>
       );
     }
-
     function Section({ label, children }) {
       return (
         <div style={{ marginBottom: 28 }}>
@@ -45,7 +42,6 @@
         </div>
       );
     }
-
     function TagSection({ label, items, color }) {
       return (
         <div>
@@ -58,13 +54,11 @@
         </div>
       );
     }
-
     function App() {
       const [input, setInput] = useState("");
       const [result, setResult] = useState(null);
       const [loading, setLoading] = useState(false);
       const [error, setError] = useState(null);
-
       const analyze = async () => {
         if (!input.trim()) return;
         setLoading(true); setError(null); setResult(null);
@@ -82,12 +76,9 @@
           setLoading(false);
         }
       };
-
       const biasPosition = result ? ((result.bias_score + 10) / 20) * 100 : 50;
-
       return (
         <div style={{ minHeight: "100vh" }}>
-          {/* Header */}
           <div style={{ borderBottom: "1px solid #2a2a2a", padding: "32px 40px 24px" }}>
             <div style={{ maxWidth: 780, margin: "0 auto" }}>
               <div style={{ fontSize: 11, letterSpacing: "0.25em", textTransform: "uppercase", color: "#666", marginBottom: 8, fontFamily: "sans-serif" }}>Approximate Truth Laboratory</div>
@@ -95,34 +86,18 @@
               <div style={{ fontSize: 13, color: "#555", marginTop: 6, fontFamily: "sans-serif" }}>because someone has to</div>
             </div>
           </div>
-
           <div style={{ maxWidth: 780, margin: "0 auto", padding: "40px" }}>
-            {/* Input */}
             <div style={{ marginBottom: 32 }}>
               <div style={{ fontSize: 11, letterSpacing: "0.2em", textTransform: "uppercase", color: "#555", marginBottom: 12, fontFamily: "sans-serif" }}>Paste headline, lede, or full article</div>
-              <textarea
-                value={input}
-                onChange={e => setInput(e.target.value)}
-                placeholder="Paste your news here. We'll tell you what they're not..."
-                style={{ width: "100%", minHeight: 140, background: "#111", border: "1px solid #2a2a2a", color: "#e8e0d0", fontFamily: "Georgia, serif", fontSize: 15, lineHeight: 1.6, padding: "16px 18px", resize: "vertical", outline: "none", borderRadius: 2 }}
-              />
-              <button
-                onClick={analyze}
-                disabled={loading || !input.trim()}
-                style={{ marginTop: 12, padding: "12px 32px", background: loading ? "#222" : "#c8b88a", color: loading ? "#555" : "#0d0d0d", border: "none", fontFamily: "sans-serif", fontSize: 11, fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", cursor: loading ? "not-allowed" : "pointer", borderRadius: 2, transition: "background 0.2s" }}
-              >
+              <textarea value={input} onChange={e => setInput(e.target.value)} placeholder="Paste your news here. We'll tell you what they're not..." style={{ width: "100%", minHeight: 140, background: "#111", border: "1px solid #2a2a2a", color: "#e8e0d0", fontFamily: "Georgia, serif", fontSize: 15, lineHeight: 1.6, padding: "16px 18px", resize: "vertical", outline: "none", borderRadius: 2 }} />
+              <button onClick={analyze} disabled={loading || !input.trim()} style={{ marginTop: 12, padding: "12px 32px", background: loading ? "#222" : "#c8b88a", color: loading ? "#555" : "#0d0d0d", border: "none", fontFamily: "sans-serif", fontSize: 11, fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", cursor: loading ? "not-allowed" : "pointer", borderRadius: 2 }}>
                 {loading ? "Cutting through the noise..." : "Analyze"}
               </button>
             </div>
-
             {error && <div style={{ color: "#e63946", fontSize: 14, fontStyle: "italic", marginBottom: 24 }}>{error}</div>}
-
             {result && (
               <div style={{ borderTop: "1px solid #2a2a2a", paddingTop: 40 }}>
-                <div style={{ background: "#111", border: "1px solid #2a2a2a", borderLeft: "3px solid #c8b88a", padding: "20px 24px", marginBottom: 32, fontStyle: "italic", fontSize: 18, lineHeight: 1.5, color: "#f0e8d8" }}>
-                  "{result.verdict}"
-                </div>
-
+                <div style={{ background: "#111", border: "1px solid #2a2a2a", borderLeft: "3px solid #c8b88a", padding: "20px 24px", marginBottom: 32, fontStyle: "italic", fontSize: 18, lineHeight: 1.5, color: "#f0e8d8" }}>"{result.verdict}"</div>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 1, marginBottom: 32, background: "#2a2a2a" }}>
                   <ScoreBox label="Credibility" value={result.credibility_score} sublabel={result.credibility_label} color={result.credibility_score > 60 ? "#90be6d" : result.credibility_score > 35 ? "#f7b267" : "#e63946"} />
                   <ScoreBox label="Clickbait" value={result.clickbait_score} sublabel={`${result.clickbait_score}% bait`} color={result.clickbait_score > 60 ? "#e63946" : result.clickbait_score > 35 ? "#f7b267" : "#90be6d"} />
@@ -135,35 +110,21 @@
                     <div style={{ display: "flex", justifyContent: "space-between", fontSize: 9, color: "#444", marginTop: 4, fontFamily: "sans-serif" }}><span>L</span><span>C</span><span>R</span></div>
                   </div>
                 </div>
-
-                <Section label="What it should have said">
-                  <div style={{ fontStyle: "italic", fontSize: 16, lineHeight: 1.6, color: "#c8d8b8", borderLeft: "2px solid #3a4a3a", paddingLeft: 16 }}>{result.rewrite}</div>
-                </Section>
-                <Section label="What actually happened">
-                  <p style={{ lineHeight: 1.7, fontSize: 15 }}>{result.what_actually_happened}</p>
-                </Section>
-                <Section label="What they want you to feel">
-                  <p style={{ lineHeight: 1.7, fontSize: 15, color: "#d4a0a0" }}>{result.what_they_want_you_to_feel}</p>
-                </Section>
-                <Section label="What's missing">
-                  <p style={{ lineHeight: 1.7, fontSize: 15 }}>{result.missing_context}</p>
-                </Section>
-
+                <Section label="What it should have said"><div style={{ fontStyle: "italic", fontSize: 16, lineHeight: 1.6, color: "#c8d8b8", borderLeft: "2px solid #3a4a3a", paddingLeft: 16 }}>{result.rewrite}</div></Section>
+                <Section label="What actually happened"><p style={{ lineHeight: 1.7, fontSize: 15 }}>{result.what_actually_happened}</p></Section>
+                <Section label="What they want you to feel"><p style={{ lineHeight: 1.7, fontSize: 15, color: "#d4a0a0" }}>{result.what_they_want_you_to_feel}</p></Section>
+                <Section label="What's missing"><p style={{ lineHeight: 1.7, fontSize: 15 }}>{result.missing_context}</p></Section>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 32 }}>
                   <TagSection label="Manipulation tactics" items={result.manipulation_tactics} color="#c8906a" />
                   <TagSection label="Logical fallacies" items={result.fallacies} color="#a090c8" />
                 </div>
-
-                <div style={{ borderTop: "1px solid #1a1a1a", paddingTop: 20, fontSize: 13, color: "#555", fontStyle: "italic" }}>
-                  ✦ {result.sardonic_note}
-                </div>
+                <div style={{ borderTop: "1px solid #1a1a1a", paddingTop: 20, fontSize: 13, color: "#555", fontStyle: "italic" }}>✦ {result.sardonic_note}</div>
               </div>
             )}
           </div>
         </div>
       );
     }
-
     ReactDOM.createRoot(document.getElementById("root")).render(<App />);
   </script>
 </body>
