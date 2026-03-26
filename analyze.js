@@ -1,4 +1,4 @@
-const SYSTEM_PROMPT = `You are a sharp, sardonic news analyst who has seen every media manipulation trick in the book and has zero patience for bullshit. Your job is to analyze news articles or headlines with brutal honesty and dry wit.
+javascriptconst SYSTEM_PROMPT = `You are a sharp, sardonic news analyst who has seen every media manipulation trick in the book and has zero patience for bullshit. Your job is to analyze news articles or headlines with brutal honesty and dry wit.
 
 When given an article or headline, provide a JSON response with EXACTLY this structure:
 {
@@ -19,10 +19,39 @@ When given an article or headline, provide a JSON response with EXACTLY this str
 
 Be specific. Be surgical. Don't moralize. ONLY return valid JSON, no markdown, no preamble.`;
 
+async function fetchArticleText(url) {
+  try {
+    const res = await fetch(url, {
+      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; NewsValidator/1.0)' }
+    });
+    const html = await res.text();
+    // Strip HTML tags and extract readable text
+    const text = html
+      .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
+      .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
+      .replace(/<[^>]+>/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .slice(0, 8000);
+    return text;
+  } catch (e) {
+    return null;
+  }
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
   try {
-    const { input } = req.body;
+    let { input } = req.body;
+
+    // If it looks like a URL, fetch the article
+    if (input.trim().startsWith('http')) {
+      const articleText = await fetchArticleText(input.trim());
+      if (articleText) {
+        input = `Article from ${input}:\n\n${articleText}`;
+      }
+    }
+
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -37,6 +66,7 @@ export default async function handler(req, res) {
         messages: [{ role: 'user', content: input }],
       }),
     });
+
     const data = await response.json();
     const text = data.content.map(i => i.text || '').join('');
     const clean = text.replace(/```json|```/g, '').trim();
